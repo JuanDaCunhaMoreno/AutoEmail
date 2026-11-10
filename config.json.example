@@ -1,0 +1,27 @@
+{
+  "gmail_email": "",
+  "gmail_app_password": "",
+  "gestor_email": "",
+  "assinatura_empresa": "Atenciosamente,\nSeu Nome\nSua Empresa",
+  "limite_diario": 45,
+  "intervalo_minutos": 3,
+  "horario_inicio": 9,
+  "horario_fim": 18,
+  "dias_uteis_apenas": true,
+  "textos_segmentos": {
+    "generico": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "tecnologia": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "energia": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "rodovia": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "saneamento": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "saude": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "educacao": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "financeiro": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "varejo": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,",
+    "outros": "Olá {nome},\n\nGostaria de apresentar uma proposta de parceria para a {empresa}.\n\nAtenciosamente,"
+  },
+  "assuntos_segmentos": {
+    "generico": ""
+  },
+  "assinatura_imagem": "assinatura.png"
+}
