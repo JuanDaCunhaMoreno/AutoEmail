@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+dist/
+build/
+*.spec
+config.json
+.env
+*.exe
+*.log
+exemplo_leads.csv
+.DS_Store
