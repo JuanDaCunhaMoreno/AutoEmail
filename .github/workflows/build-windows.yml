@@ -1,4 +1,4 @@
-name: Build Windows Executable
+name: Build Multi-Platform
 
 on:
   push:
@@ -8,10 +8,11 @@ on:
     types: [created]
 
 jobs:
+  # ========== WINDOWS ==========
   build-windows:
     runs-on: windows-latest
     permissions:
-      contents: write 
+      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -29,11 +30,84 @@ jobs:
         with:
           name: AutoEmail-Windows
           path: dist/AutoEmail.exe
-      - name: Create Release (se for tag)
+      - name: Release Windows
         if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: dist/AutoEmail.exe
-          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ========== DEBIAN/LINUX ==========
+  build-debian:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk python3-dev
+      - name: Install Python dependencies
+        run: |
+          pip install pyinstaller
+      - name: Build executable (Linux)
+        run: |
+          pyinstaller --onefile --name AutoEmail desktop_app.py
+      - name: Create .deb package
+        run: |
+          mkdir -p deb-package/usr/local/bin
+          mkdir -p deb-package/usr/share/applications
+          mkdir -p deb-package/usr/share/pixmaps
+          cp dist/AutoEmail deb-package/usr/local/bin/
+          # .desktop file
+          cat > deb-package/usr/share/applications/autoemail.desktop << 'EOF'
+          [Desktop Entry]
+          Name=AutoEmail
+          Comment=Envio automático de e-mails
+          Exec=AutoEmail
+          Icon=autoemail
+          Terminal=false
+          Type=Application
+          Categories=Office;Email;
+          EOF
+          # ícone genérico (opcional)
+          # cp seu_icone.png deb-package/usr/share/pixmaps/autoemail.png
+          # control file
+          cat > deb-package/DEBIAN/control << 'EOF'
+          Package: autoemail
+          Version: 1.0.0
+          Section: office
+          Priority: optional
+          Architecture: amd64
+          Depends: python3, python3-tk
+          Maintainer: Juan Moreno <juan@exemplo.com>
+          Description: AutoEmail - Automação de envio de e-mails
+           Interface gráfica para envio automatizado de e-mails em massa
+           com suporte a CSV, templates e anexos.
+          EOF
+          dpkg-deb --build deb-package autoemail_1.0.0_amd64.deb
+      - name: Upload artifact (binário)
+        uses: actions/upload-artifact@v5
+        with:
+          name: AutoEmail-Linux
+          path: dist/AutoEmail
+      - name: Upload artifact (.deb)
+        uses: actions/upload-artifact@v5
+        with:
+          name: AutoEmail-Debian-Package
+          path: autoemail_1.0.0_amd64.deb
+      - name: Release Linux
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/AutoEmail
+            autoemail_1.0.0_amd64.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
